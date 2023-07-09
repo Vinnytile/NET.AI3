@@ -1,0 +1,107 @@
+Create a function implementing the regular expression validation according to the defined acceptance criteria. Use C#. The function should accept the string to match and return the Boolean matching result.:
+
+This regular expression should validate the maximum string length (passed as parameter); it should return a match if the string length is within the acceptable range and a non-match if it is not. 
+
+This regular expression should also validate that the string contains at least one uppercase letter, one lowercase letter, one digit, and one special character from a predefined list: !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~. It should return a match if the criteria are met and a non-match if they are not. 
+
+This regular expression should validate that the string does not contain any whitespace characters (spaces, tabs, or newlines). This should return a non-match if any whitespace characters are found. 
+
+The regular expression should be optimized for execution speed and simplicity. The regular expression should still fulfill all the above criteria. 
+
+The regular expression should be tested in code on a variety of sample inputs and edge cases (10) to ensure the regex is functioning properly. 
+
+The regular expression should be implemented within the code in a way that it can be easily reused for various inputs. 
+
+Implementation should not introduce any unexpected behavior or bugs. 
+
+Clear and concise documentation should be provided for the regular expression, explaining how it works, and any caveats or limitations. 
+ChatGPT
+Here is an implementation of the function as per your requirements in C#. It's worth mentioning that using regular expressions to validate string length isn't the most optimal way. I will implement it as required but a simple length check is faster and easier to understand.
+
+csharp
+Copy code
+using System;
+using System.Text.RegularExpressions;
+
+public class StringValidator
+{
+    // the regex pattern
+    private static string pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~])[^\\s]+$";
+
+    /// <summary>
+    /// Validates a string against a predefined pattern.
+    /// </summary>
+    /// <param name="input">The input string to validate.</param>
+    /// <param name="maxLength">The maximum length of the string.</param>
+    /// <returns>True if the string matches the pattern and its length is less than maxLength, false otherwise.</returns>
+    public static bool ValidateString(string input, int maxLength)
+    {
+        if (input.Length > maxLength)
+        {
+            return false;
+        }
+
+        return Regex.IsMatch(input, pattern);
+    }
+}
+Test cases:
+
+csharp
+Copy code
+public class Program
+{
+    public static void Main()
+    {
+        Console.WriteLine(StringValidator.ValidateString("Test123!", 10)); // True
+        Console.WriteLine(StringValidator.ValidateString("test123!", 10)); // False, no uppercase letter
+        Console.WriteLine(StringValidator.ValidateString("TEST123!", 10)); // False, no lowercase letter
+        Console.WriteLine(StringValidator.ValidateString("Testtest!", 10)); // False, no digit
+        Console.WriteLine(StringValidator.ValidateString("Test1234", 10)); // False, no special character
+        Console.WriteLine(StringValidator.ValidateString("Test 123!", 10)); // False, contains whitespace
+        Console.WriteLine(StringValidator.ValidateString("Test123!Test123!", 10)); // False, exceeds maximum length
+        Console.WriteLine(StringValidator.ValidateString("Test123!", 8)); // True
+        Console.WriteLine(StringValidator.ValidateString("", 10)); // False, empty string
+        Console.WriteLine(StringValidator.ValidateString("T1!", 10)); // False, no lowercase letter
+    }
+}
+The regular expression pattern works as follows:
+
+(?=.*[a-z]) looks ahead to ensure there's at least one lowercase letter.
+(?=.*[A-Z]) looks ahead to ensure there's at least one uppercase letter.
+(?=.*\\d) looks ahead to ensure there's at least one digit.
+(?=.*[!\"#$%&'()*+,-./:;<=>?@[\\]^_{|}~])` looks ahead to ensure there's at least one special character from the list.
+[^\\s]+ ensures that the string does not contain any whitespace.
+^ and $ are start and end of line anchors.
+Remember that Regex's are computationally expensive and not all cases might be handled by this function. Edge cases related to Unicode characters or various other special characters are not handled in this simple function. For more robust string validation, consider using dedicated libraries or built-in functions.
+
+
+
+
+
+User
+write this regular expression with max length check
+ChatGPT
+While it's generally not recommended or practical to use regular expressions for length validation due to its limitations and performance implications, it can be done using lookaheads. Below is an updated version of the StringValidator class with the length check incorporated into the regular expression:
+
+csharp
+Copy code
+using System;
+using System.Text.RegularExpressions;
+
+public class StringValidator
+{
+    /// <summary>
+    /// Validates a string against a predefined pattern.
+    /// </summary>
+    /// <param name="input">The input string to validate.</param>
+    /// <param name="maxLength">The maximum length of the string.</param>
+    /// <returns>True if the string matches the pattern and its length is less than or equal to maxLength, false otherwise.</returns>
+    public static bool ValidateString(string input, int maxLength)
+    {
+        string pattern = $"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!\"#$%&'()*+,-./:;<=>?@[\\]^_`{{|}}~])[^\\s]{{1,{maxLength}}}$";
+        return Regex.IsMatch(input, pattern);
+    }
+}
+The {1,maxLength} part of the regular expression specifies that the string should be between 1 and maxLength characters long. It is important to note that this will make the regular expression even more complex and could lead to performance issues if maxLength is large.
+
+Also, note that we had to make pattern a local variable instead of a static one because it now depends on the maxLength parameter. The {maxLength} inside the interpolated string $"" is replaced with the actual value of the maxLength parameter when the string is created.

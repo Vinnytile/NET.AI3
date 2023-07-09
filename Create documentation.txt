@@ -1,25 +1,49 @@
-# NET.AI3
-Repository for the .NET AI experiment
+There are the following code:
+public class StringValidator {
 
-# Application Description
+    /// <summary>
+    /// Validates a string against a predefined pattern.
+    /// </summary>
+    /// <param name="input">The input string to validate.</param>
+    /// <param name="maxLength">The maximum length of the string.</param>
+    /// <returns>True if the string matches the pattern and its length is less than maxLength, false otherwise.</returns>
+    public static bool ValidateString(string input, int maxLength) {
+      string pattern = $"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!\"#$%&'()*+,-./:;<=>?@[\\]^_`{{|}}~])[^\\s]{{1,{maxLength}}}$";
+      return Regex.IsMatch(input, pattern);
+    }
+  }
+
+Write Readme.md with  
+Application description: 1 paragraph, 2-5 Sentences. 
+Regex implementation description: 1 paragraph, 4-10 Sentences. 
+Information on how to run the developed application locally. 
+ChatGPT
+README.md
+Application Description
 This application serves as a simple, yet effective string validator, which is implemented in a self-contained public class called StringValidator. The main functionality is provided by a static method, ValidateString, that allows developers to validate input strings against a specific pattern. This utility is designed to ensure string data meets certain security or formatting standards in a variety of application contexts, such as data validation, password strength checking, or pattern matching.
 
-# Regex Implementation Description
+Regex Implementation Description
 The ValidateString method employs a regular expression, or regex, to determine if an input string matches a predefined pattern. The pattern used in this implementation requires that the string contains at least one lowercase letter, one uppercase letter, one digit, and one special character from a defined set. It also restricts the length of the string to a specified maximum. The regex pattern is constructed dynamically with the maximum length parameter to allow for flexibility. It uses positive lookaheads to ensure the existence of each required type of character, and it uses a negated whitespace character class to disallow any spaces within the string. The method Regex.IsMatch is then used to check whether the input string matches this pattern.
 
-# Running the Application Locally
+Running the Application Locally
 To run the developed application locally, follow these steps:
 
-1) Ensure you have a compatible .NET environment installed on your local machine. If not, you can download and install the .NET SDK from Microsoft's official website.
+Ensure you have a compatible .NET environment installed on your local machine. If not, you can download and install the .NET SDK from Microsoft's official website.
 
-2) Clone the repository containing the StringValidator class to your local machine.
+Clone the repository containing the StringValidator class to your local machine.
+
+bash
+Copy code
 git clone <repository_url>
+Navigate into the directory of the cloned repository:
 
-3) Navigate into the directory of the cloned repository:
+bash
+Copy code
 cd <directory_name>
+Now, you can create a program to utilize the StringValidator class. A simple console application can be created for this purpose. Here's a sample program:
 
-4) Now, you can create a program to utilize the StringValidator class. A simple console application can be created for this purpose. Here's a sample program:
-
+csharp
+Copy code
 using System;
 
 class Program {
@@ -34,8 +58,9 @@ class Program {
         Console.WriteLine("Validation result: " + result);
     }
 }
+Finally, you can run your program with the .NET CLI:
 
-5) Finally, you can run your program with the .NET CLI:
+arduino
+Copy code
 dotnet run
-
 Now you can test strings against the StringValidator's pattern right in your local environment!
